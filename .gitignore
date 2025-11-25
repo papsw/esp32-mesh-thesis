@@ -1,0 +1,14 @@
+# Build folders
+build/
+.gradle/
+
+# IntelliJ
+.idea/
+*.iml
+
+# System files
+.DS_Store
+Thumbs.db
+
+# SQLite database
+*.db
