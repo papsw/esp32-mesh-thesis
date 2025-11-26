@@ -1,14 +1,44 @@
-# Build folders
-build/
+# Gradle
 .gradle/
+build/
+out/
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# Kotlin / Compose Desktop
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+*.log
+hs_err_pid*
 
 # IntelliJ
 .idea/
+*.ipr
+*.iws
 *.iml
 
-# System files
+# OS junk
 .DS_Store
 Thumbs.db
 
-# SQLite database
+# SQLite databases (runtime-generated)
+mesh.db
 *.db
+*.sqlite
+
+# Logs
+*.log
+
+# Simulator artifacts
+sim_output/
+simulator.log
+
+# Backend runtime
+*.pid
+*.lock
+
+# Ktor temporary files
+ktor-*.tmp
