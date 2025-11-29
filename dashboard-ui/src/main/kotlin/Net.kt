@@ -1,3 +1,5 @@
+package dashboard
+
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.websocket.*
@@ -8,17 +10,17 @@ import kotlinx.serialization.json.*
 @Serializable
 data class WSReading(
     val role: String? = null,
-    val temp_c: Double? = null,
-    val humidity_pct: Double? = null,
-    val pressure_hpa: Double? = null,
-    val light_lux: Double? = null,
-    val air_quality_raw: Double? = null
+    val tempC: Double? = null,
+    val humidityPct: Double? = null,
+    val pressureHpa: Double? = null,
+    val lightLux: Double? = null,
+    val airQualityRaw: Double? = null
 )
 
 @Serializable
 data class WSAggregate(
-    val msg_type: String,
-    val leader_id: Int,
+    val msgType: String,
+    val leaderId: Int,
     val round: Int,
     val readings: Map<String, WSReading>
 )
@@ -32,7 +34,7 @@ suspend fun ws(onMsg: (WSAggregate) -> Unit) {
             val t = (f as? Frame.Text)?.readText() ?: continue
             try {
                 val msg = json.decodeFromString<WSAggregate>(t)
-                if (msg.msg_type == "aggregate") onMsg(msg)
+                if (msg.msgType == "aggregate") onMsg(msg)
             } catch (_: Exception) {}
         }
     }

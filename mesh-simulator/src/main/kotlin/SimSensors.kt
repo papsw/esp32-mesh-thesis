@@ -1,3 +1,5 @@
+package meshsim
+
 import kotlinx.serialization.json.*
 
 object SimSensors {

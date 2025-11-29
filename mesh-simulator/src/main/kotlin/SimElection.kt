@@ -1,3 +1,5 @@
+package meshsim
+
 enum class NodeRole { FOLLOWER, LEADER, IN_ELECTION }
 
 data class ElectionState(

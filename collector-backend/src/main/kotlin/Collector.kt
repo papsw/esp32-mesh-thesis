@@ -1,19 +1,20 @@
-import com.fazecast.jSerialComm.SerialPort
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
-import java.sql.Connection
-import java.sql.DriverManager
-import java.time.Instant
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
+package collector
 
+import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import java.sql.Connection
+import java.sql.DriverManager
 import java.time.Duration
+import java.time.Instant
 
 @Serializable
 data class ReadingEntry(
@@ -58,13 +59,17 @@ fun openDb(): Connection {
     return conn
 }
 
-fun Application.wsModule(broadcastChannel: Channel<String>) {
+// ---------------------
+// 1) SharedFlow WebSockets
+// ---------------------
+fun Application.wsModule(flow: SharedFlow<String>) {
     install(WebSockets) {
         pingPeriod = Duration.ofSeconds(20)
     }
     routing {
         webSocket("/ws") {
-            for (msg in broadcastChannel) {
+            // Automatically stops when client disconnects
+            flow.collect { msg ->
                 send(msg)
             }
         }
@@ -72,32 +77,29 @@ fun Application.wsModule(broadcastChannel: Channel<String>) {
 }
 
 fun main() = runBlocking {
-    //serial
-    /*val portName =
-        if (System.getProperty("os.name").startsWith("Windows")) "COM3"
-        else "/dev/ttyUSB0"
-
-    val serial = SerialPort.getCommPort(portName).apply { baudRate = 115200 }
-    if (!serial.openPort()) return@runBlocking
-    */
-    // temp serial port rm cause of no hardware
     println("Backend in sim mode. Waiting for simulator...")
     val socket = java.net.ServerSocket(9091).accept()
     println("Simulator connected.")
     val reader = socket.getInputStream().bufferedReader()
 
-
     val json = Json { ignoreUnknownKeys = true }
     val conn = openDb()
-    val broadcastChannel = Channel<String>(Channel.BUFFERED)
 
-    embeddedServer(Netty, port = 9090) { wsModule(broadcastChannel) }
-        .start(wait = false)
+    // ---------------------
+    // 2) Create SharedFlow broadcaster
+    // ---------------------
+    val flow = MutableSharedFlow<String>(
+        replay = 0,
+        extraBufferCapacity = 100
+    )
 
-    //val reader = serial.inputStream.bufferedReader()
+    embeddedServer(Netty, port = 9090) {
+        wsModule(flow)
+    }.start(wait = false)
 
     while (true) {
         val line = reader.readLine() ?: continue
+
         try {
             val msg = json.decodeFromString<AggregateMessage>(line)
             if (msg.msg_type != "aggregate") continue
@@ -128,7 +130,13 @@ fun main() = runBlocking {
                 ps.executeUpdate()
             }
 
-            broadcastChannel.send(line)
-        } catch (_: Exception) {}
+            // ---------------------
+            // 3) Non-blocking broadcast
+            // ---------------------
+            flow.tryEmit(line)
+
+        } catch (_: Exception) {
+            // ignore malformed lines safely
+        }
     }
 }

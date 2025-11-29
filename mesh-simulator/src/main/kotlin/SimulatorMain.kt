@@ -1,8 +1,9 @@
+package meshsim
 import kotlinx.coroutines.*
 import java.io.PrintWriter
 import java.net.Socket
 
-fun retryUntilConnected(host: String, port: Int): java.net.Socket {
+fun retryUntilConnected(host: String, port: Int): Socket {
     while (true) {
         try {
             println("Simulator: trying to connect to backend on $host:$port...")

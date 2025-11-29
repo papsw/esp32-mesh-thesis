@@ -1,3 +1,5 @@
+package meshsim
+
 import kotlinx.coroutines.channels.Channel
 
 object CollectorPipe {

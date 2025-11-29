@@ -1,3 +1,4 @@
+package dashboard
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.verticalScroll
@@ -32,7 +33,7 @@ fun UI(dark: Boolean, toggle: () -> Unit) {
         launch {
             ws { 
                 readings = DB.latest()
-                leader = it.leader_id
+                leader = it.leaderId
                 updated = Instant.now()
             }
         }

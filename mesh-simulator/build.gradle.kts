@@ -15,5 +15,5 @@ dependencies {
 }
 
 application {
-    mainClass.set("SimulatorMainKt")
+    mainClass.set("meshsim.SimulatorMainKt")
 }

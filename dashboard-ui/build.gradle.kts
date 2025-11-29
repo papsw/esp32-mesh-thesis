@@ -2,7 +2,7 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     kotlin("jvm") version "1.9.22"
-    id("org.jetbrains.compose") version "1.6.0"
+    id("org.jetbrains.compose") version "1.6.11"
     kotlin("plugin.serialization") version "1.9.22"
 }
 
@@ -22,7 +22,7 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "MainKt"
+        mainClass = "dashboard.MainKt"
         nativeDistributions {
             targetFormats(TargetFormat.Deb, TargetFormat.Rpm, TargetFormat.Msi)
         }

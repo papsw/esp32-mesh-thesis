@@ -1,33 +1,41 @@
 # Gradle
 .gradle/
-build/
-out/
+**/.gradle/
+**/build/
+**/out/
+
+# Allow Gradle wrapper binaries
 !gradle/wrapper/gradle-wrapper.jar
 !gradle/wrapper/gradle-wrapper.properties
 
-# Kotlin / Compose Desktop
+# Kotlin / JVM
 *.class
 *.jar
 *.war
 *.ear
-*.iml
-*.log
-hs_err_pid*
+*.kotlin_module
+*.kotlin_metadata
 
-# IntelliJ
+# Test outputs
+**/reports/
+**/test-results/
+
+# IntelliJ / Android Studio
 .idea/
-*.ipr
-*.iws
+**/.idea/
 *.iml
+*.iws
+*.ipr
 
 # OS junk
 .DS_Store
 Thumbs.db
 
-# SQLite databases (runtime-generated)
+# SQLite databases
 mesh.db
 *.db
 *.sqlite
+*.db-journal
 
 # Logs
 *.log
@@ -40,5 +48,10 @@ simulator.log
 *.pid
 *.lock
 
-# Ktor temporary files
+# Ktor temporary test files
 ktor-*.tmp
+**/ktor-test*
+
+# Node / Web
+node_modules/
+dist/

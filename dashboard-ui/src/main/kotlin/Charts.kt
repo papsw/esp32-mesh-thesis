@@ -1,3 +1,5 @@
+package dashboard
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
@@ -24,11 +26,11 @@ fun LineChart(values: List<Double?>, color: Color) {
     val maxY = ys.max()
 
     Canvas(Modifier.fillMaxWidth().height(160.dp)) {
-        val W = size.width
-        val H = size.height
+        val w = size.width
+        val h = size.height
 
-        fun mx(x: Float) = (x - minX) / (maxX - minX) * W
-        fun my(y: Float) = H - (y - minY) / (maxY - minY) * H
+        fun mx(x: Float) = (x - minX) / (maxX - minX) * w
+        fun my(y: Float) = h - (y - minY) / (maxY - minY) * h
 
         for (i in 0 until pts.size - 1) {
             val (x1, y1) = pts[i]

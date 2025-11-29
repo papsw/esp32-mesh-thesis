@@ -1,5 +1,6 @@
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
+package meshsim
+
+import kotlinx.coroutines.delay
 
 object SimBus {
     private val nodes = mutableListOf<SimNode>()

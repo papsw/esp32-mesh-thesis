@@ -1,13 +1,14 @@
+package meshsim
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.serialization.json.*
 
 class SimNode(
     val nodeId: Int,
-    val sensorType: String
+    private val sensorType: String
 ) {
     val inbox = Channel<String>(Channel.BUFFERED)
-    val state = ElectionState()
+    private val state = ElectionState()
 
     suspend fun start() = coroutineScope {
         SimBus.register(this@SimNode)
@@ -21,7 +22,7 @@ class SimNode(
 
     private suspend fun receiverLoop() {
         for (raw in inbox) {
-            if (raw == null || raw.isBlank()) continue
+            if (raw.isBlank()) continue
 
             val json = try {
                 Json.parseToJsonElement(raw).jsonObject
