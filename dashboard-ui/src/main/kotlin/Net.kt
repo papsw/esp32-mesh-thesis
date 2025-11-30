@@ -25,8 +25,11 @@ data class WSAggregate(
     val readings: Map<String, WSReading>
 )
 
+@OptIn(ExperimentalSerializationApi::class)
 suspend fun ws(onMsg: (WSAggregate) -> Unit) {
-    val json = Json { ignoreUnknownKeys = true }
+    val json = Json { ignoreUnknownKeys = true
+    namingStrategy = JsonNamingStrategy.SnakeCase
+    }
     val client = HttpClient(CIO) { install(WebSockets) }
 
     client.webSocket("ws://localhost:9090/ws") {

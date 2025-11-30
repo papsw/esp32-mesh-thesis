@@ -18,6 +18,7 @@ dependencies {
     implementation("io.ktor:ktor-client-cio-jvm:2.3.8")
     implementation("io.ktor:ktor-client-websockets-jvm:2.3.8")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation("org.jetbrains.compose.material:material-icons-extended-desktop:1.6.11")
 }
 
 compose.desktop {
